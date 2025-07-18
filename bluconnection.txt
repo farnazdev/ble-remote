@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Bluetooth Connect',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const BluetoothConnectPage(),
+    );
+  }
+}
+
+class BluetoothConnectPage extends StatefulWidget {
+  const BluetoothConnectPage({super.key});
+
+  @override
+  State<BluetoothConnectPage> createState() => _BluetoothConnectPageState();
+}
+
+class _BluetoothConnectPageState extends State<BluetoothConnectPage> {
+  final TextEditingController _macAddressController = TextEditingController();
+  String _statusMessage = "لطفا مک آدرس را وارد کنید و دکمه اتصال را بزنید.";
+
+  // متد اتصال به دستگاه
+  Future<void> _connectToDevice() async {
+    String macAddress = _macAddressController.text.trim();
+
+    if (macAddress.isEmpty) {
+      setState(() {
+        _statusMessage = "مک آدرس نمی‌تواند خالی باشد!";
+      });
+      return;
+    }
+
+    setState(() {
+      _statusMessage = "در حال جستجو برای دستگاه...";
+    });
+
+    try {
+      var subscription = FlutterBluePlus.scanResults.listen((results) async {
+        for (ScanResult r in results) {
+          print('دستگاه پیدا شد: ${r.device.remoteId}');
+
+          if (r.device.remoteId.str.toUpperCase() == macAddress.toUpperCase()) {
+            setState(() {
+              _statusMessage = "دستگاه پیدا شد! در حال اتصال...";
+            });
+
+            await FlutterBluePlus.stopScan();
+
+            try {
+              await r.device.connect();
+              setState(() {
+                _statusMessage = "اتصال موفقیت‌آمیز بود! 🎉";
+              });
+            } catch (e) {
+              setState(() {
+                _statusMessage = "خطا در اتصال: $e";
+              });
+            }
+            return;
+          }
+        }
+      });
+
+      // شروع اسکن
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
+
+      // منتظر می‌مانیم تا اسکن تمام شود
+      await Future.delayed(const Duration(seconds: 10));
+
+      await FlutterBluePlus.stopScan();
+      subscription.cancel();
+
+      setState(() {
+        _statusMessage = "دستگاه پیدا نشد. لطفا آدرس را بررسی کنید.";
+      });
+    } catch (e) {
+      setState(() {
+        _statusMessage = "خطا در فرآیند اسکن: $e";
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('اتصال به بلوتوث'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _macAddressController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'مک آدرس دستگاه',
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _connectToDevice,
+              child: const Text('اتصال'),
+            ),
+            const SizedBox(height: 30),
+            Text(
+              _statusMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.black87),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
