@@ -33,28 +33,31 @@ This app allows users to connect to hardware devices like ESP32, send and receiv
 
 ## Demo
 
-Watch the demo video of the app in action:  
-📎 [View on Google Drive](https://your-google-drive-link-here)
+Download demo version  
+📎 [Download](https://drive.google.com/file/d/1pkRml7Il0meaTQMLomyX9NiwcByXqQ5C/view?usp=sharing)
 
 ---
-
-## Setup & Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-
 
 ## Requirements
 Flutter SDK (3.x or higher recommended)
 Android/iOS device with BLE support
 ESP32 or similar BLE-enabled board (configured and programmed)
 
-
 ---
-
 
 ## Testing
 Test BLE communication using real hardware (e.g., ESP32)
 You may use serial logs on the ESP side to debug
 Try different BLE UUIDs and characteristics for custom functionality
+
+---
+
+## Documents
+
+ESP32 Settings 
+📎 [View](https://docs.google.com/document/d/1IWLbg7YjoaI_iWqJ4IRbKXqlv0O1UsCYtXzrZz1IFC8/edit?usp=sharing)
+
+Project Review 
+📎 [View](https://docs.google.com/document/d/1M0EIgf4BeMVW6MTf1dIidWd-DYLFxy1pffufiWRi47U/edit?usp=sharing)
+
+---
