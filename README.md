@@ -47,8 +47,7 @@ This app allows users to connect to hardware devices like ESP32, send and receiv
 
 ## Demo
 
-Download demo version  
-📎 [Download](https://drive.google.com/file/d/1pkRml7Il0meaTQMLomyX9NiwcByXqQ5C/view?usp=sharing)
+Download demo version 📎 [Download](https://drive.google.com/file/d/1pkRml7Il0meaTQMLomyX9NiwcByXqQ5C/view?usp=sharing)
 
 
 
